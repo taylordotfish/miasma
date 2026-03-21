@@ -32,11 +32,19 @@ jobs:
       - name: Build Binary
         run: cargo build --profile tiny
 
+      - name: Move Binary Windows
+        if: runner.os == 'Windows'
+        run: Move-Item -Path target\tiny\miasma.exe -Destination "${{ matrix.build[1] }}" -Force
+
+      - name: Move Binary Unix
+        if: runner.os != 'Windows'
+        run: mv target/tiny/miasma ${{ matrix.build[1] }}
+
       - name: Upload Binary
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.build[1] }}
-          path: "target/tiny/miasma${{ startsWith(matrix.build[0], 'windows') && '.exe' || '' }}"
+          path: ${{ matrix.build[1] }}
           overwrite: true
 
   Release:

@@ -37,7 +37,9 @@ pub async fn serve_poison(
         }
     };
 
-    let page = html_builder::build_html_str(config.link_count, &config.link_prefix, &poison).await;
+    let page = html_builder::POSION_PAGE
+        .build_html_str(&poison, config.link_count, &config.link_prefix)
+        .await;
 
     (StatusCode::OK, Html(page))
 }

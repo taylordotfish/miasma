@@ -16,6 +16,10 @@ pub struct MiasmaConfig {
     #[arg(short = 'p', long, default_value_t = 9999)]
     pub port: u16,
 
+    /// host to listen for requests
+    #[arg(long, default_value_t = String::from("localhost") )]
+    pub host: String,
+
     /// maximum number of in-flight requests - if exceeded, miasma responds with a 429 error
     #[arg(short = 'c', long, default_value_t = 2_500, value_parser = clap::value_parser!(u32).range(1..))]
     pub max_in_flight: u32,
@@ -29,7 +33,7 @@ pub struct MiasmaConfig {
     pub link_prefix: LinkPrefix,
 
     /// poisoned training data source
-    #[arg(short = 's', long, default_value_t = Url::parse("https://rnsaffn.com/poison2/").unwrap())]
+    #[arg(long, default_value_t = Url::parse("https://rnsaffn.com/poison2/").unwrap())]
     pub poison_source: Url,
 }
 

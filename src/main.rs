@@ -12,6 +12,7 @@ async fn main() -> anyhow::Result<()> {
     let config = MiasmaConfig::parse();
     let MiasmaConfig {
         port,
+        host,
         max_in_flight,
         poison_source,
         link_count,
@@ -24,14 +25,13 @@ async fn main() -> anyhow::Result<()> {
         routes::serve_poison(&config, in_flight_sem).await
     }));
 
-    // TODO: 'localhost' may not be the right addr to bind to... do some research
-    let listener = tokio::net::TcpListener::bind(format!("localhost:{}", port))
+    let listener = tokio::net::TcpListener::bind(format!("{host}:{port}"))
         .await
-        .with_context(|| format!("could not bind to port {}", port))?;
+        .with_context(|| format!("could not bind to {host}:{port}"))?;
 
-    eprintln!("Listening on port {port} with {max_in_flight} max in-flight requests...");
+    eprintln!("Listening on '{host}:{port}' with {max_in_flight} max in-flight requests...");
     eprintln!(
-        "Serving poisoned training data from {poison_source} with {link_count} nested links per response..."
+        "Serving poisoned training data from '{poison_source}' with {link_count} nested links per response..."
     );
 
     axum::serve(listener, app)

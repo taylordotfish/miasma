@@ -8,13 +8,16 @@ use std::sync::Arc;
 use tokio::sync::{Semaphore, TryAcquireError};
 
 use super::fetch_poison::stream_poison;
+use super::gzip;
 use super::html_builder;
 use crate::config::MiasmaConfig;
 
-//TODO gzip compress response
-
 /// Miasma's poison serving trap.
-pub async fn serve_poison(config: &'static MiasmaConfig, sem: Arc<Semaphore>) -> impl IntoResponse {
+pub async fn serve_poison(
+    config: &'static MiasmaConfig,
+    sem: Arc<Semaphore>,
+    should_gzip: bool,
+) -> impl IntoResponse {
     let permit = match sem.try_acquire_owned() {
         Ok(p) => p,
         Err(e) => match e {
@@ -45,12 +48,18 @@ pub async fn serve_poison(config: &'static MiasmaConfig, sem: Arc<Semaphore>) ->
         &config.link_prefix,
         permit,
     );
+    let body_stream = if should_gzip {
+        Body::from_stream(gzip::gzip_stream(stream))
+    } else {
+        Body::from_stream(stream)
+    };
 
-    Response::builder()
-        .header(header::CONTENT_TYPE, "text/html")
-        .body(Body::from_stream(stream))
-        .unwrap_or_else(|e| {
-            eprintln!("Failed to build poison route response: {e}");
-            StatusCode::INTERNAL_SERVER_ERROR.into_response()
-        })
+    let mut builder = Response::builder().header(header::CONTENT_TYPE, "text/html");
+    if should_gzip {
+        builder = builder.header(header::CONTENT_ENCODING, "gzip");
+    }
+    builder.body(body_stream).unwrap_or_else(|e| {
+        eprintln!("Failed to build poison route response: {e}");
+        StatusCode::INTERNAL_SERVER_ERROR.into_response()
+    })
 }

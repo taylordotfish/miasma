@@ -957,6 +957,7 @@ name = "miasma"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-compression",
  "async-stream",
  "axum",
  "bytes",
@@ -964,6 +965,7 @@ dependencies = [
  "futures",
  "reqwest",
  "tokio",
+ "tokio-util",
  "url",
  "uuid",
 ]

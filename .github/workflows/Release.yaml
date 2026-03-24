@@ -30,15 +30,15 @@ jobs:
           ref: ${{ inputs.tag }}
 
       - name: Build Binary
-        run: cargo build --profile tiny
+        run: cargo build --release
 
       - name: Move Binary Windows
         if: runner.os == 'Windows'
-        run: Move-Item -Path target\tiny\miasma.exe -Destination "${{ matrix.build[1] }}" -Force
+        run: Move-Item -Path target\release\miasma.exe -Destination "${{ matrix.build[1] }}" -Force
 
       - name: Move Binary Unix
         if: runner.os != 'Windows'
-        run: mv target/tiny/miasma ${{ matrix.build[1] }}
+        run: mv target/release/miasma ${{ matrix.build[1] }}
 
       - name: Upload Binary
         uses: actions/upload-artifact@v7

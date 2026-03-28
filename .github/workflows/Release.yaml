@@ -45,16 +45,16 @@ jobs:
     needs: Run-Checks
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - uses: actions/checkout@v6
+
+      - name: Publish to crates.io
+        run: |
           if [[ "${{ inputs.skip-publish }}" == "true" ]]; then
             echo "Skipping publish to crates.io..."
             exit 0
           fi
 
-      - uses: actions/checkout@v6
-
-      - name: Publish to crates.io
-        run: cargo publish
+          cargo publish
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_TOKEN }}
 

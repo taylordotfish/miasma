@@ -7,6 +7,11 @@ on:
         description: "Tag to push and release. Should match format <major>.<minor>.<patch> with no prefix or suffix."
         required: true
         type: string
+      skip-publish:
+        description: "Skip publishing to crates.io. You should ONLY do this if publishing previously succeeded but releasing to GitHub failed."
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -40,6 +45,12 @@ jobs:
     needs: Run-Checks
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          if [[ "${{ inputs.skip-publish }}" == "true" ]]; then
+            echo "Skipping publish to crates.io..."
+            exit 0
+          fi
+
       - uses: actions/checkout@v6
 
       - name: Publish to crates.io

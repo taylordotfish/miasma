@@ -14,8 +14,8 @@ _Miasma_ is very fast and has a minimal memory footprint - you should not have t
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset=".github/images/response-dark.png">
-    <img width="675" src=".github/images/response-light.png" alt="Sample response from Miasma.">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/austin-weeks/miasma/main/.github/images/response-dark.png">
+    <img width="675" src="https://raw.githubusercontent.com/austin-weeks/miasma/main/.github/images/response-light.png" alt="Sample response from Miasma.">
   </picture>
 </p>
 
@@ -58,8 +58,8 @@ When we're done, scrapers will be trapped like so:
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset=".github/images/flow-chart-dark.png">
-    <img height="425" src=".github/images/flow-chart-light.png" alt="Flow chart depicting cycle of trapped scrapers.">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/austin-weeks/miasma/main/.github/images/flow-chart-dark.png">
+    <img height="425" src="https://raw.githubusercontent.com/austin-weeks/miasma/main/.github/images/flow-chart-light.png" alt="Flow chart depicting cycle of trapped scrapers.">
   </picture>
 </p>
 
@@ -103,7 +103,7 @@ Let's deploy and watch as multi-billion dollar companies greedily eat from our e
 
 <p align="center">
   <picture>
-    <img src=".github/images/logs.gif" />
+    <img src="https://raw.githubusercontent.com/austin-weeks/miasma/main/.github/images/logs.gif" />
   </picture>
 </p>
 

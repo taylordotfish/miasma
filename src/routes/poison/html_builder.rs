@@ -30,7 +30,33 @@ impl HtmlBuilder {
             yield Ok(Bytes::from(self.start_to_poison));
 
             while let Some(chunk) = poison.next().await {
-                yield chunk;
+                let Ok(mut chunk) = chunk else {
+                    yield chunk;
+                    continue;
+                };
+
+                loop {
+                    let Some((i, esc)) = chunk
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, b)| match *b {
+                            b'<' => Some((i, &b"&lt;"[..])),
+                            b'>' => Some((i, b"&gt;")),
+                            b'&' => Some((i, b"&amp;")),
+                            _ => None,
+                        })
+                        .next()
+                    else {
+                        yield Ok(chunk);
+                        break;
+                    };
+
+                    let remaining = chunk.split_off(i + 1);
+                    chunk.truncate(i);
+                    yield Ok(chunk);
+                    yield Ok(esc.into());
+                    chunk = remaining;
+                }
             }
 
             yield Ok(Bytes::from(self.poison_to_links));
